@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import sendPrivateMessage from "../sendPrivateMessage.js";
+import {formatMessage, postArticle} from "../utils/index.js"
 
 export default [
     {
@@ -12,11 +13,19 @@ export default [
     },
     {
         data: new SlashCommandBuilder()
-            .setName("ping")
-            .setDescription("Replies pong"),
+            .setName("post")
+            .setDescription("post an article")
+            .addStringOption(option =>
+                option.setName('article')
+                    .setDescription('the article to post')
+                    .setRequired(true)),
         async execute(interaction) {
-            sendPrivateMessage(interaction.client, interaction.member ,"a request was sent by " + interaction.user.tag)
-            await interaction.reply("pong");
+            const article = await postArticle({});
+            if(article) {
+                sendPrivateMessage(interaction.client, formatMessage(interaction.user.tag ,interaction.options.getString("article")))
+                await interaction.reply("request passed for admin to validate");
+            }
+            await interaction.reply("sorry, couldn't post the article :/");
         },
     },
 ];

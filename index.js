@@ -15,6 +15,19 @@ client.once(Events.ClientReady, (c) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
+    if (interaction.isButton()) {
+        //interaction.reply(interaction.component.customId)
+        switch (interaction.component.customId) {
+            case "approve":
+                console.log(interaction.message);
+                break;
+            case "decline":
+                break;
+            default:
+                break;
+        }
+    }
+
     if (!interaction.isChatInputCommand()) return;
 
     const command = interaction.client.commands.get(interaction.commandName);
