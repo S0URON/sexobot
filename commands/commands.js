@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
+import sendPrivateMessage from "../sendPrivateMessage.js";
 
 export default [
     {
@@ -14,8 +15,8 @@ export default [
             .setName("ping")
             .setDescription("Replies pong"),
         async execute(interaction) {
-            console.log(JSON.stringify(interaction.user, null, 4));
-            await interaction.reply(JSON.stringify(interaction.user));
+            sendPrivateMessage(interaction.client, interaction.member ,"a request was sent by " + interaction.user.tag)
+            await interaction.reply("pong");
         },
     },
 ];

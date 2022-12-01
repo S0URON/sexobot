@@ -1,6 +1,7 @@
 import { Client, Events, GatewayIntentBits, Collection } from "discord.js";
 import { config } from "./config.js";
 import localCommands from "./commands/commands.js";
+import sendPrivateMessage from "./sendPrivateMessage.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
