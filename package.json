@@ -1,0 +1,19 @@
+{
+  "name": "bot-discord",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec node index.js",
+    "deploy-commands": "node deploy-commands.js"
+  },
+  "author": "el mokni medamin",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "node-fetch": "^3.3.0",
+    "nodemon": "^2.0.20"
+  }
+}
