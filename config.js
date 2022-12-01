@@ -1,4 +1,7 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 export const config = {
-    botToken : "MTA0NzkxOTgwODg2NTM3ODM5NQ.G8v2Wg.XkE_mcCOvEgs5muvQTOGg2vLoDxzBS6DFUgFSY",
-    appID : "1047919808865378395"
+    botToken : process.env.DISCORD_TOKEN,
+    appID : process.env.DISCORD_APP_ID
 }
