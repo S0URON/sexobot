@@ -37,32 +37,40 @@ export default [
                     .setRequired(true)
             ),
         async execute(interaction) {
-            let user = await findUserByDiscordId(interaction.user.id);
-            const discordUser = JSON.stringify(interaction.user);
-            if (!user) {
-                const newUser = {
-                    discordId: interaction.user.id,
-                    ...JSON.parse(discordUser),
-                };
-                user = await createUser(newUser);
-            }
-            const article = await postArticle({
-                sender: user._id,
-                title: interaction.options.getString("title"),
-                content: interaction.options.getString("article"),
-            });
-            if (article) {
-                await sendPrivateMessage(
-                    interaction.client,
-                    formatMessage(
-                        interaction.user.tag,
-                        interaction.options.getString("article"),
-                        article._id
-                    )
-                );
-                await interaction.reply("request passed for admin to validate");
-            } else {
-                await interaction.reply("sorry, couldn't post the article :/");
+            try {
+                let user = await findUserByDiscordId(interaction.user.id);
+                const discordUser = JSON.stringify(interaction.user);
+                if (!user) {
+                    const newUser = {
+                        discordId: interaction.user.id,
+                        ...JSON.parse(discordUser),
+                    };
+                    user = await createUser(newUser);
+                }
+                const article = await postArticle({
+                    sender: user._id,
+                    title: interaction.options.getString("title"),
+                    content: interaction.options.getString("article"),
+                });
+                if (article) {
+                    await sendPrivateMessage(
+                        interaction.client,
+                        formatMessage(
+                            interaction.user.tag,
+                            interaction.options.getString("article"),
+                            article._id
+                        )
+                    );
+                    await interaction.reply(
+                        "request passed for admin to validate"
+                    );
+                } else {
+                    await interaction.reply(
+                        "sorry, couldn't post the article :/"
+                    );
+                }
+            } catch (error) {
+                console.log(error);
             }
         },
     },
