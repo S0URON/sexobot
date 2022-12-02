@@ -1,7 +1,7 @@
 import { Client, Events, GatewayIntentBits, Collection } from "discord.js";
 import { config } from "./config.js";
 import localCommands from "./commands/commands.js";
-import sendPrivateMessage from "./sendPrivateMessage.js";
+import { validateArticle, updateStyle } from "./utils/index.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -15,16 +15,65 @@ client.once(Events.ClientReady, (c) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
-    if (interaction.isButton()) {
-        //interaction.reply(interaction.component.customId)
+    if (interaction.isSelectMenu()) {
+        let articleId = interaction.message.content
+            .split("id=")[1]
+            .split(":")[0];
+        let approveResult = false;
         switch (interaction.component.customId) {
-            case "approve":
-                console.log(interaction.message);
+            case "color":
+                approveResult = await updateStyle(articleId, {
+                    backgoundColor: interaction.values[0],
+                    textColor: null,
+                    textFont: null,
+                });
                 break;
-            case "decline":
+            case "text-color":
+                approveResult = await updateStyle(articleId, {
+                    backgoundColor: null,
+                    textColor: interaction.values[0],
+                    textFont: null,
+                });
+                break;
+            case "font":
+                approveResult = await updateStyle(articleId, {
+                    backgoundColor: null,
+                    textColor: null,
+                    textFont: interaction.values[0],
+                });
                 break;
             default:
                 break;
+        }
+        if (approveResult) {
+            await interaction.reply("article status updated");
+        } else {
+            await interaction.reply("couldn't update article style");
+        }
+    }
+    if (interaction.isButton()) {
+        let articleId = "";
+        let approveResult = false;
+        switch (interaction.component.customId) {
+            case "approve":
+                articleId = interaction.message.content
+                    .split("id=")[1]
+                    .split(":")[0];
+                approveResult = await validateArticle(articleId, "APPROVED");
+                break;
+            case "decline":
+                articleId = interaction.message.content
+                    .split("id=")[1]
+                    .split(":")[0];
+                approveResult = await validateArticle(articleId, "DECLINED");
+                break;
+            default:
+                break;
+        }
+        if (approveResult) {
+            await interaction.reply("article status updated");
+        } else {
+            await interaction.reply("couldn't update article status");
         }
     }
 
