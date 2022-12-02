@@ -28,7 +28,7 @@ build_image_dev:
   before_script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
   script:
-    - docker build  -f dev.Dockerfile --tag $DOCKER_IMAGE_TEST:$CI_COMMIT_SHORT_SHA-dev .
+    - docker build  --build-args DISCORD_APP_ID --build-args DISCORD_TOKEN  -f dev.Dockerfile --tag $DOCKER_IMAGE_TEST:$CI_COMMIT_SHORT_SHA-dev .
     - docker push $DOCKER_IMAGE_TEST:$CI_COMMIT_SHORT_SHA-dev
 
   only:
