@@ -1,4 +1,4 @@
-const admins = ["314073451646287875"];
+const admins = ["314073451646287875", "1048087259796230175"];
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 
 export default async (client, replyText) => {
