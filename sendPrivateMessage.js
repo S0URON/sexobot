@@ -15,7 +15,7 @@ export default async (client, replyText) => {
                     .setLabel("decline")
                     .setStyle(ButtonStyle.Danger),
             ]);
-            user.send({
+            await user.send({
                 content: replyText,
                 components: [row],
             });
