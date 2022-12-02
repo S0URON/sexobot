@@ -33,7 +33,7 @@ build_image_dev:
     - docker push $DOCKER_IMAGE_TEST:$CI_COMMIT_SHORT_SHA-dev
 
   only:
-    - develop  
+    - main  
   tags :
     - gitlab-org-docker
  
@@ -50,7 +50,7 @@ deploy_dev:
     - cd $CI_PROJECT_DIR && ansible-playbook -i deployment/dev_inventory  deployment/dev_deploy.yml  --private-key="$CI_PROJECT_DIR"/.ssh/id_rsa
 
   only:
-    -  develop   
+    -  main   
   tags :
     - gitlab-org-docker
   needs: ["build_image_dev"]
