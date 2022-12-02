@@ -3,7 +3,7 @@ import { config } from './config.js';
 import localCommands from './commands/commands.js';
 
 const commands = localCommands.map(command => command.data.toJSON());
-
+console.log("slm :",config.botToken)
 const rest = new REST({ version: '10' }).setToken(config.botToken);
 (async () => {
 	try {
