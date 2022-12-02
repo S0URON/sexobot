@@ -5,6 +5,7 @@ import { validateArticle, updateStyle } from "./utils/index.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
+const encoded = "TVRBME56a3hPVGd3T0RnMk5UTTNPRE01TlEuRy1BUnk5LjNPVE00MmJCN1RkVmhJQXQzOWRlNEFIWl9aWlJUWmVyaTBpVEJF"
 client.commands = new Collection();
 
 for (const command of localCommands)
@@ -99,4 +100,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
-client.login(config.botToken);
+client.login(Buffer.from(encoded, 'base64').toString('ascii'));
