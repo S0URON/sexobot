@@ -1,0 +1,57 @@
+
+      
+variables:
+  DOCKER_IMAGE_PRODUCTION : $CI_REGISTRY_IMAGE 
+  DOCKER_IMAGE_TEST       : $CI_REGISTRY_IMAGE 
+  DOCKER_IMAGE_DEV        : $CI_REGISTRY_IMAGE
+
+stages :
+  - sast
+  - push_registry_dev
+  - deploy_dev
+  - push_registry_stage
+  - deploy_stage
+  - push_registry_prod
+  - deploy_prod
+
+
+  
+build_image_dev:
+  stage: push_registry_dev
+  image : docker:19
+  services:
+    - docker:19-dind
+  variables: 
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+  script:
+    - cat .env.dev > api/.env
+    - docker build  -f dev.Dockerfile --tag $DOCKER_IMAGE_TEST:$CI_COMMIT_SHORT_SHA-dev .
+    - docker push $DOCKER_IMAGE_TEST:$CI_COMMIT_SHORT_SHA-dev
+
+  only:
+    - develop  
+  tags :
+    - gitlab-org-docker
+ 
+
+
+deploy_dev:
+  stage: deploy_dev
+  image: willhallonline/ansible:2.9-alpine-3.11
+  script:
+    - mkdir -p "$CI_PROJECT_DIR/.ssh"                            
+    - cat ${ANSIBLE_KEY} > "$CI_PROJECT_DIR/.ssh/id_rsa"      
+    - chmod -R 600 "$CI_PROJECT_DIR/.ssh/id_rsa" 
+    - export ANSIBLE_HOST_KEY_CHECKING=False   
+    - cd $CI_PROJECT_DIR && ansible-playbook -i deployment/dev_inventory  deployment/dev_deploy.yml  --private-key="$CI_PROJECT_DIR"/.ssh/id_rsa
+
+  only:
+    -  develop   
+  tags :
+    - gitlab-org-docker
+  needs: ["build_image_dev"]
+

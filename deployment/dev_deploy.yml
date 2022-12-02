@@ -1,0 +1,45 @@
+---
+- hosts: sexobot_network
+  
+  tasks:                                                     
+  - name: Create docker network
+    docker_network:
+      name: "{{ network_name }}"
+      ipam_config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+
+- hosts: dev
+  gather_facts: no
+  
+  tasks:
+  - name: Log into docker registry and force re-authorization
+    docker_login:
+      registry: "{{ registry_url }}"
+      username: "{{ registry_user }}"
+      password: "{{ registry_password }}"
+      reauthorize: yes
+
+  - name : start container
+    docker_container:
+      name: "{{ c_name }}"
+      image : "{{ image_name }}"
+      pull: yes
+      restart_policy: always
+      hostname: "{{ h_name }}"
+      
+      exposed_ports:
+        - "{{ container_port }}"
+      networks:
+        - name: "{{ network_name }}"
+          ipv4_address: "{{ ip}}"
+      purge_networks: yes
+ 
+  
+- hosts : sexobot_clean
+  gather_facts : no
+  
+
+  tasks: 
+  - name: Removing exited containers
+    shell: docker system prune -af --volumes
