@@ -11,4 +11,4 @@ RUN npm install
 EXPOSE 3000
 # For best practices you may add some HealthCheks to the app
 RUN node deploy-commands.js
-CMD node index.js
+CMD DISCORD_TOKEN=$DISCORD_TOKEN node index.js
