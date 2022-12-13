@@ -5,7 +5,7 @@ import { validateArticle, updateStyle } from "./utils/index.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-const encoded = "TVRBME56a3hPVGd3T0RnMk5UTTNPRE01TlEuRy1BUnk5LjNPVE00MmJCN1RkVmhJQXQzOWRlNEFIWl9aWlJUWmVyaTBpVEJF"
+const encoded = "encoded token"
 client.commands = new Collection();
 
 for (const command of localCommands)
